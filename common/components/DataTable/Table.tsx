@@ -36,11 +36,17 @@ export function Table<T>({ columns, data, isLoading, emptyMessage, onRowClick, r
           ) : (
             data.map((item, rowIdx) => (
               <tr key={rowIdx} className={`group hover:bg-slate-50/80 transition-colors ${onRowClick ? 'cursor-pointer' : ''}`} onClick={() => onRowClick?.(item)}>
-                {columns.map((col, colIdx) => (
-                  <td key={colIdx} className={`px-6 py-5 whitespace-nowrap ${col.className || ''}`}>
-                    {col.cell ? col.cell(item) : (col.accessorKey ? String(item[col.accessorKey]) : null)}
-                  </td>
-                ))}
+                {columns.map((col, colIdx) => {
+                  // Determine if whitespace should be forced to nowrap (default) or respected if 'whitespace-' class is present
+                  const isWhitespaceOverridden = col.className?.includes('whitespace-');
+                  const whitespaceClass = isWhitespaceOverridden ? '' : 'whitespace-nowrap';
+                  
+                  return (
+                    <td key={colIdx} className={`px-6 py-5 ${whitespaceClass} ${col.className || ''}`}>
+                      {col.cell ? col.cell(item) : (col.accessorKey ? String(item[col.accessorKey]) : null)}
+                    </td>
+                  );
+                })}
                 {rowActions && (
                     <td className="px-6 py-5 text-right whitespace-nowrap">
                         <div className="flex justify-end gap-2" onClick={e => e.stopPropagation()}>
