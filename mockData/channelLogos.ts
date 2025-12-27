@@ -1,0 +1,7 @@
+
+export const CHANNEL_LOGOS: Record<string, string> = {
+    "Shopify": "https://www.vectorlogo.zone/logos/shopify/shopify-ar21~bgwhite.svg",
+    "Amazon": "https://www.vectorlogo.zone/logos/amazon/amazon-ar21~bgwhite.svg",
+    "WooCommerce": "https://upload.wikimedia.org/wikipedia/commons/5/51/WooCommerce_logo_%282015%29.svg",
+    "Walmart": "https://www.vectorlogo.zone/logos/walmart/walmart-ar21~bgwhite.svg"
+};

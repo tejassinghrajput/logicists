@@ -1,0 +1,39 @@
+
+[
+    { 
+        "id": "shopify", 
+        "name": "Shopify", 
+        "desc": "Sync orders and inventory.", 
+        "icon": "ShoppingBag", 
+        "logo": "https://www.vectorlogo.zone/logos/shopify/shopify-ar21~bgwhite.svg",
+        "color": "text-emerald-600", 
+        "bg": "bg-emerald-50" 
+    },
+    { 
+        "id": "amazon", 
+        "name": "Amazon", 
+        "desc": "FBA and FBM order management.", 
+        "icon": "ShoppingCart", 
+        "logo": "https://www.vectorlogo.zone/logos/amazon/amazon-ar21~bgwhite.svg",
+        "color": "text-orange-600", 
+        "bg": "bg-orange-50" 
+    },
+    { 
+        "id": "woocommerce", 
+        "name": "WooCommerce", 
+        "desc": "Open source e-commerce sync.", 
+        "icon": "Store", 
+        "logo": "https://upload.wikimedia.org/wikipedia/commons/5/51/WooCommerce_logo_%282015%29.svg",
+        "color": "text-violet-600", 
+        "bg": "bg-violet-50" 
+    },
+    { 
+        "id": "walmart", 
+        "name": "Walmart", 
+        "desc": "Marketplace integration.", 
+        "icon": "ShoppingBasket", 
+        "logo": "https://www.vectorlogo.zone/logos/walmart/walmart-ar21~bgwhite.svg",
+        "color": "text-blue-600", 
+        "bg": "bg-blue-50" 
+    }
+]
