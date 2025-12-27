@@ -7,5 +7,7 @@ export { Card } from './Card/Card';
 export { Button } from './Button/Button';
 export { Input } from './Input/Input';
 export { Select } from './Select/Select';
+export { EditableInput } from './Editable/EditableInput';
+export { EditableSelect } from './Editable/EditableSelect';
 export { Modal } from './Modal/Modal';
 export { ToastProvider, useToast } from './Toast/ToastContext';
