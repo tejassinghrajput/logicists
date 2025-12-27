@@ -19,7 +19,7 @@ export const DesktopSidebar: React.FC<DesktopSidebarProps> = ({ navGroups, isExp
             </div>
             {isExpanded && <button onClick={togglePin} className="text-slate-500 hover:text-white transition-colors"><ChevronLeft className={`w-5 h-5 transition-transform ${isPinned ? '' : 'rotate-180'}`} /></button>}
         </div>
-        <div className="flex-1 overflow-y-auto overflow-x-hidden scrollbar-hide py-6 px-3 space-y-8">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden py-6 px-3 space-y-8">
             {navGroups.map((group, idx) => (
                 <div key={idx}>
                     {isExpanded && <div className="px-3 mb-2 text-[10px] font-bold uppercase tracking-wider text-slate-600">{group.label}</div>}

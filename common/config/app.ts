@@ -8,18 +8,14 @@ const getEnv = (key: string) => {
   }
 };
 
+const FORCE_MEMORY_MODE = false; 
 const routingEnv = getEnv('VITE_ENABLE_ROUTING');
+const apiEnv = getEnv('VITE_API_URL');
 
-// Logic:
-// 1. If VITE_ENABLE_ROUTING is explicitly 'false', disable routing (use MemoryRouter).
-// 2. If VITE_ENABLE_ROUTING is 'true' or undefined, enable routing (use BrowserRouter).
-const isRoutingDisabled = String(routingEnv).toLowerCase() === 'false';
-
-console.log('[App Config] Raw Env:', routingEnv);
-console.log('[App Config] Routing Enabled:', !isRoutingDisabled);
+const isRoutingEnabled = !FORCE_MEMORY_MODE && String(routingEnv).toLowerCase() === 'true';
 
 export const APP_CONFIG = {
-  // Controls whether the app syncs with the browser URL (History API)
-  // or runs in "Memory Mode" (SPA behavior without URL changes).
-  ENABLE_ROUTING: !isRoutingDisabled
+  ENABLE_ROUTING: isRoutingEnabled,
+  API_URL: apiEnv || '', // Leave empty to trigger mock mode in services
+  IS_MOCK: !apiEnv
 };

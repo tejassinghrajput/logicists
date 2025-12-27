@@ -7,6 +7,7 @@ export interface Column<T> {
   cell?: (item: T) => React.ReactNode;
   className?: string;
   headerClassName?: string;
+  sortable?: boolean;
 }
 
 export interface FilterDefinition<T> {

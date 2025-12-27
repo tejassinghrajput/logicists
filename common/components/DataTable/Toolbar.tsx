@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Search, Filter, MoreHorizontal, SlidersHorizontal, Plus } from 'lucide-react';
 import { Button, Input, Dropdown } from '../Shared';
 import { FilterPanel } from './FilterPanel';
@@ -27,14 +27,9 @@ export function Toolbar<T>({
     const filterRef = useRef<HTMLDivElement>(null);
     const overflowActions = secondaryActions?.slice(2) || [];
 
-    // Mobile Menu Items construction
     const mobileMenuItems = [];
     if (filterConfig && filterConfig.length > 0) {
-        mobileMenuItems.push({ 
-            label: `Filters ${activeFilterCount > 0 ? `(${activeFilterCount})` : ''}`, 
-            icon: Filter, 
-            onClick: () => setIsFilterOpen(true) 
-        });
+        mobileMenuItems.push({ label: `Filters ${activeFilterCount > 0 ? `(${activeFilterCount})` : ''}`, icon: Filter, onClick: () => setIsFilterOpen(true) });
     }
     if (primaryAction) {
         mobileMenuItems.push({ label: primaryAction.label, icon: primaryAction.icon || Plus, onClick: primaryAction.onClick, variant: 'default' as const });
@@ -45,25 +40,36 @@ export function Toolbar<T>({
         });
     }
 
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (filterRef.current && !filterRef.current.contains(event.target as Node)) {
+                if (window.innerWidth >= 768) setIsFilterOpen(false);
+            }
+        };
+        if (isFilterOpen) document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, [isFilterOpen]);
+
     return (
-      <div className="p-4 sm:p-6 border-b border-slate-100 bg-white flex flex-col xl:flex-row justify-between items-center gap-4 rounded-t-2xl z-20 relative">
-          
-          {/* Main Layout */}
+      <div className="p-4 sm:p-5 border-b border-slate-200 flex flex-col xl:flex-row justify-between items-center gap-4 relative z-20">
           <div className="flex items-center gap-3 w-full">
-             {/* Search Bar - Flex Grow to take available space */}
              {enableSearch && (
                  <div className="flex-1">
                     <Input icon={Search} placeholder={searchPlaceholder} value={searchQuery} onChange={(e) => onSearchChange(e.target.value)} className="w-full shadow-sm" />
                  </div>
              )}
 
-             {/* Desktop Actions (Hidden on Mobile) */}
              <div className="hidden md:flex items-center gap-3">
                  {filterConfig && filterConfig.length > 0 && (
                      <div className="relative" ref={filterRef}>
                          <Button variant={activeFilterCount > 0 ? 'primary' : 'secondary'} icon={Filter} onClick={() => setIsFilterOpen(!isFilterOpen)}>
                             Filters {activeFilterCount > 0 && <span className="ml-1.5 bg-white/20 px-1.5 py-0.5 rounded text-[10px] font-bold">{activeFilterCount}</span>}
                          </Button>
+                         {isFilterOpen && (
+                             <div className="absolute top-full right-0 mt-2 z-50">
+                                 <FilterPanel filters={filterConfig} activeFilters={activeFilters} onFilterChange={onFilterChange} onClear={() => { onClearFilters(); setIsFilterOpen(false); }} onClose={() => setIsFilterOpen(false)} className="w-80 origin-top-right" />
+                             </div>
+                         )}
                      </div>
                  )}
                  {secondaryActions?.slice(0, 2).map((a, i) => <Button key={i} variant={a.variant || 'secondary'} icon={a.icon} onClick={a.onClick}>{a.label}</Button>)}
@@ -71,26 +77,14 @@ export function Toolbar<T>({
                  {primaryAction && <Button variant={primaryAction.variant || 'primary'} icon={primaryAction.icon} onClick={primaryAction.onClick}>{primaryAction.label}</Button>}
              </div>
 
-             {/* Mobile Actions Menu (Visible on Mobile) */}
              <div className="md:hidden flex-shrink-0">
-                 <Dropdown 
-                    align="right"
-                    trigger={<Button variant="secondary" icon={SlidersHorizontal} className="h-11 w-11 p-0" />} 
-                    items={mobileMenuItems}
-                 />
+                 <Dropdown align="right" trigger={<Button variant="secondary" icon={SlidersHorizontal} className="h-11 w-11 p-0" />} items={mobileMenuItems} />
              </div>
           </div>
 
-          {/* Filter Panel - Positioned relative to toolbar container on mobile if needed, or desktop anchor */}
           {isFilterOpen && (
-             <div className="absolute top-full right-0 left-0 md:left-auto md:w-auto z-50 px-4 md:px-0 mt-2">
-                 <FilterPanel 
-                    filters={filterConfig || []} 
-                    activeFilters={activeFilters} 
-                    onFilterChange={onFilterChange} 
-                    onClear={() => { onClearFilters(); setIsFilterOpen(false); }} 
-                    onClose={() => setIsFilterOpen(false)} 
-                 />
+             <div className="md:hidden absolute top-full left-0 right-0 z-50 px-4 mt-2">
+                 <FilterPanel filters={filterConfig || []} activeFilters={activeFilters} onFilterChange={onFilterChange} onClear={() => { onClearFilters(); setIsFilterOpen(false); }} onClose={() => setIsFilterOpen(false)} className="w-full origin-top" />
              </div>
           )}
       </div>

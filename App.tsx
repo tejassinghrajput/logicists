@@ -16,22 +16,23 @@ import { Notification } from './common/types';
 import { initializeStorage } from './common/utils/storage';
 import { ToastProvider } from './common/components/Shared';
 import { MOCK_NOTIFICATIONS } from './common/mockData/notifications';
+import { authService } from './common/services/auth';
 
 export default function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(authService.isAuthenticated());
   const [notifications, setNotifications] = useState<Notification[]>([]);
 
   useEffect(() => { initializeStorage(); setNotifications(MOCK_NOTIFICATIONS); }, []);
-
   const handleMarkAsRead = (id: string) => setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
   const handleMarkAllAsRead = () => setNotifications(prev => prev.map(n => ({ ...n, read: true })));
   const handleDeleteNotification = (id: string) => setNotifications(prev => prev.filter(n => n.id !== id));
+  const handleLogout = () => { authService.logout(); setIsAuthenticated(false); };
 
   if (!isAuthenticated) return <ToastProvider><Auth onLogin={() => setIsAuthenticated(true)} /></ToastProvider>;
 
   return (
     <ToastProvider>
-        <Layout onLogout={() => setIsAuthenticated(false)} notifications={notifications} onMarkAsRead={handleMarkAsRead} onMarkAllAsRead={handleMarkAllAsRead}>
+        <Layout onLogout={handleLogout} notifications={notifications} onMarkAsRead={handleMarkAsRead} onMarkAllAsRead={handleMarkAllAsRead}>
             <Routes>
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/shipments" element={<Shipments />} />

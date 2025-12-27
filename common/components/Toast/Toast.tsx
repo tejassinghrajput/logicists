@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { X, CheckCircle, AlertTriangle, Info, AlertCircle } from 'lucide-react';
 import { ToastData } from './types';
@@ -22,7 +21,7 @@ export const Toast: React.FC<{ toast: ToastData; onDismiss: (id: string) => void
   const Icon = { success: CheckCircle, error: AlertCircle, warning: AlertTriangle, info: Info, default: null }[toast.type];
 
   return (
-    <div className={`w-full max-w-sm rounded-xl border p-4 shadow-lg transition-all duration-300 ${style} ${isExiting ? 'opacity-0 translate-x-full' : 'animate-slide-up'}`} role="alert">
+    <div className={`w-full max-w-sm rounded-xl border p-4 shadow-lg transition-all duration-300 pointer-events-auto ${style} ${isExiting ? 'opacity-0 translate-x-full' : 'animate-slide-up'}`} role="alert">
       <div className="flex items-start gap-3">
         {Icon && <Icon className="w-5 h-5 flex-shrink-0 opacity-80" />}
         <div className="flex-1">
