@@ -11,3 +11,4 @@ export { EditableInput } from './Editable/EditableInput';
 export { EditableSelect } from './Editable/EditableSelect';
 export { Modal } from './Modal/Modal';
 export { ToastProvider, useToast } from './Toast/ToastContext';
+export { Breadcrumbs } from './Breadcrumbs/Breadcrumbs';
