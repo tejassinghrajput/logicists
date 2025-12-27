@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Card, Button, useToast } from '../../../../common/components/Shared';
 import { NotificationRow } from './notifications/NotificationRow';
+import { Mail, Bell, MessageSquare } from 'lucide-react';
 
 export const NotificationSettings: React.FC = () => {
   const [loading, setLoading] = useState(false);
@@ -19,11 +20,17 @@ export const NotificationSettings: React.FC = () => {
     <div className="space-y-6 animate-fade-in">
         <Card title="Notification Preferences" subtitle="Manage how and when you receive updates.">
             <div className="mt-4">
-                <div className="grid grid-cols-12 gap-4 border-b border-slate-100 pb-3 mb-3">
+                <div className="hidden md:grid grid-cols-12 gap-4 border-b border-slate-100 pb-3 mb-3">
                     <div className="col-span-6 text-xs font-bold text-slate-400 uppercase tracking-wider pl-2">Activity</div>
-                    <div className="col-span-2 text-center text-xs font-bold text-slate-400 uppercase tracking-wider">Email</div>
-                    <div className="col-span-2 text-center text-xs font-bold text-slate-400 uppercase tracking-wider">Push</div>
-                    <div className="col-span-2 text-center text-xs font-bold text-slate-400 uppercase tracking-wider">SMS</div>
+                    <div className="col-span-2 flex items-center justify-center gap-2 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                        <Mail className="w-3.5 h-3.5" /> Email
+                    </div>
+                    <div className="col-span-2 flex items-center justify-center gap-2 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                        <Bell className="w-3.5 h-3.5" /> Push
+                    </div>
+                    <div className="col-span-2 flex items-center justify-center gap-2 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                        <MessageSquare className="w-3.5 h-3.5" /> SMS
+                    </div>
                 </div>
                 <NotificationRow label="Shipment Status" desc="Delivered, Exceptions" email push sms color="teal" />
                 <NotificationRow label="Billing & Invoices" desc="New invoice, Payment failed" email push color="violet" />

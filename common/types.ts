@@ -4,7 +4,8 @@ export type ViewState =
   | 'settings_user' | 'settings_company' | 'settings_payouts'
   | 'settings_security' | 'settings_notifications' 
   | 'settings_integrations' | 'settings_api'
-  | 'channels_active' | 'channels_all' | 'channels_orders';
+  | 'channels_active' | 'channels_all' | 'channels_orders'
+  | 'notifications_all' | 'notifications_alerts' | 'notifications_announcements';
 
 export type UserRole = 'admin' | 'manager' | 'driver';
 export type ShipmentStatus = 'pending' | 'processing' | 'in_transit' | 'delivered' | 'exception';

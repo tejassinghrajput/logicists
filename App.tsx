@@ -10,18 +10,40 @@ import { Settings } from './modules/settings/Settings';
 import { ActiveView } from './modules/channels/views/ActiveView';
 import { AllView } from './modules/channels/views/AllView';
 import { OrdersView } from './modules/channels/views/OrdersView';
+import { ActivityView } from './modules/notifications/views/ActivityView';
 import { Auth } from './modules/auth/Auth';
-import { ViewState } from './common/types';
+import { ViewState, Notification } from './common/types';
 import { initializeStorage } from './common/utils/storage';
-import { ToastProvider } from './common/components/Shared';
+import { ToastProvider, useToast } from './common/components/Shared';
+import { MOCK_NOTIFICATIONS } from './common/mockData/notifications';
 
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentView, setCurrentView] = useState<ViewState>('dashboard');
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  
+  // Centralized Notification State
+  const [notifications, setNotifications] = useState<Notification[]>([]);
 
-  useEffect(() => { initializeStorage(); }, []);
+  useEffect(() => { 
+      initializeStorage(); 
+      setNotifications(MOCK_NOTIFICATIONS);
+  }, []);
+
   const handleNav = (view: ViewState, id?: string) => { if (id) setSelectedId(id); setCurrentView(view); };
+  
+  // Notification Handlers
+  const handleMarkAsRead = (id: string) => {
+    setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
+  };
+
+  const handleMarkAllAsRead = () => {
+    setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+  };
+
+  const handleDeleteNotification = (id: string) => {
+      setNotifications(prev => prev.filter(n => n.id !== id));
+  };
 
   if (!isAuthenticated) return <ToastProvider><Auth onLogin={() => setIsAuthenticated(true)} /></ToastProvider>;
 
@@ -37,13 +59,23 @@ export default function App() {
       case 'channels_active': return <ActiveView />;
       case 'channels_all': return <AllView />;
       case 'channels_orders': return <OrdersView />;
+      case 'notifications_all': return <ActivityView notifications={notifications} onMarkAsRead={handleMarkAsRead} onDelete={handleDeleteNotification} filter="all" />;
+      case 'notifications_alerts': return <ActivityView notifications={notifications} onMarkAsRead={handleMarkAsRead} onDelete={handleDeleteNotification} filter="alerts" />;
+      case 'notifications_announcements': return <ActivityView notifications={notifications} onMarkAsRead={handleMarkAsRead} onDelete={handleDeleteNotification} filter="announcements" />;
       default: return <Dashboard onNavigate={handleNav} />;
     }
   };
 
   return (
     <ToastProvider>
-        <Layout currentView={currentView} onNavigate={handleNav} onLogout={() => setIsAuthenticated(false)}>
+        <Layout 
+            currentView={currentView} 
+            onNavigate={handleNav} 
+            onLogout={() => setIsAuthenticated(false)}
+            notifications={notifications}
+            onMarkAsRead={handleMarkAsRead}
+            onMarkAllAsRead={handleMarkAllAsRead}
+        >
           {renderContent()}
         </Layout>
     </ToastProvider>

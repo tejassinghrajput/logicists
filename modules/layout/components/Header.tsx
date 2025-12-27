@@ -1,22 +1,31 @@
 
 import React, { useRef, useState, useEffect } from 'react';
 import { Menu, Search, Bell, User, LogOut, CreditCard } from 'lucide-react';
-import { ViewState } from '../../../common/types';
+import { ViewState, Notification } from '../../../common/types';
+import { NotificationDropdown } from './NotificationDropdown';
 
 interface HeaderProps {
     onMobileMenuOpen: () => void;
     onNavigate: (view: ViewState) => void;
     onLogout: () => void;
-    unreadCount: number;
+    notifications: Notification[];
+    onMarkAsRead: (id: string) => void;
+    onMarkAllAsRead: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ onMobileMenuOpen, onNavigate, onLogout, unreadCount }) => {
+export const Header: React.FC<HeaderProps> = ({ onMobileMenuOpen, onNavigate, onLogout, notifications, onMarkAsRead, onMarkAllAsRead }) => {
     const [showProfileMenu, setShowProfileMenu] = useState(false);
+    const [showNotifications, setShowNotifications] = useState(false);
+    
     const profileRef = useRef<HTMLDivElement>(null);
+    const notificationRef = useRef<HTMLDivElement>(null);
+
+    const unreadCount = notifications.filter(n => !n.read).length;
 
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => {
              if (profileRef.current && !profileRef.current.contains(e.target as Node)) setShowProfileMenu(false);
+             if (notificationRef.current && !notificationRef.current.contains(e.target as Node)) setShowNotifications(false);
         };
         document.addEventListener('mousedown', handleClickOutside);
         return () => document.removeEventListener('mousedown', handleClickOutside);
@@ -33,11 +42,30 @@ export const Header: React.FC<HeaderProps> = ({ onMobileMenuOpen, onNavigate, on
           </div>
           
           <div className="flex items-center space-x-2 sm:space-x-4">
-            <button className="relative p-2.5 rounded-xl text-slate-500 hover:text-brand-600 hover:bg-brand-50 transition-all">
-                {unreadCount > 0 && <span className="absolute top-2.5 right-2.5 block h-2 w-2 rounded-full bg-rose-500 ring-2 ring-white animate-pulse" />}
-                <Bell className="w-5 h-5" />
-            </button>
+            {/* Notification Bell */}
+            <div className="relative" ref={notificationRef}>
+                <button 
+                    onClick={() => setShowNotifications(!showNotifications)}
+                    className={`relative p-2.5 rounded-xl transition-all ${showNotifications ? 'bg-brand-50 text-brand-600' : 'text-slate-500 hover:text-brand-600 hover:bg-brand-50'}`}
+                >
+                    {unreadCount > 0 && <span className="absolute top-2.5 right-2.5 block h-2 w-2 rounded-full bg-rose-500 ring-2 ring-white animate-pulse" />}
+                    <Bell className="w-5 h-5" />
+                </button>
+                {showNotifications && (
+                    <div className="absolute right-0 mt-3 w-80 sm:w-96 bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden z-50 animate-scale-in origin-top-right">
+                        <NotificationDropdown 
+                            notifications={notifications} 
+                            onMarkAsRead={onMarkAsRead} 
+                            onMarkAllAsRead={onMarkAllAsRead}
+                            onClose={() => setShowNotifications(false)}
+                        />
+                    </div>
+                )}
+            </div>
+            
             <div className="h-6 w-px bg-slate-200 hidden sm:block" />
+            
+            {/* Profile Menu */}
             <div className="relative" ref={profileRef}>
                 <button onClick={() => setShowProfileMenu(!showProfileMenu)} className="flex items-center space-x-3 p-1.5 rounded-full transition-all duration-200 hover:bg-white hover:shadow-sm">
                     <div className="hidden sm:flex flex-col items-end mr-1"><span className="text-sm font-semibold text-slate-900">Alex Morgan</span><span className="text-[10px] uppercase tracking-wide font-medium text-slate-500">Vendor Admin</span></div>

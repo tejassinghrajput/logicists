@@ -1,5 +1,5 @@
 
-import { LayoutDashboard, Truck, Wallet, Settings, Globe, User, Building, Shield, Bell, Key, Blocks, CreditCard } from 'lucide-react';
+import { LayoutDashboard, Truck, Wallet, Settings, Globe, User, Building, Shield, Bell, Key, Blocks, CreditCard, Activity } from 'lucide-react';
 import { NavItem } from './components/SidebarItem';
 
 type NavGroup = { label: string; items: NavItem[] };
@@ -41,6 +41,19 @@ export const NAV_GROUPS: NavGroup[] = [
             { id: 'invoices', label: 'Invoices', view: 'invoices' },
         ]
       },
+    ]
+  },
+  {
+    label: "Activity",
+    items: [
+        {
+            id: 'notifications_parent', label: 'Notifications', icon: Bell,
+            children: [
+                { id: 'notifications_all', label: 'All Activity', view: 'notifications_all' },
+                { id: 'notifications_alerts', label: 'Alerts', view: 'notifications_alerts' },
+                { id: 'notifications_announcements', label: 'Announcements', view: 'notifications_announcements' },
+            ]
+        }
     ]
   },
   {
