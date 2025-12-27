@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { Card, Button, useToast } from '../../../../common/components/Shared';
+import { Card, Button, useToast } from '../../../common/components/Shared';
 import { NotificationRow } from './notifications/NotificationRow';
 import { Mail, Bell, MessageSquare } from 'lucide-react';
 
