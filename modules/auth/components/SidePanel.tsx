@@ -6,7 +6,7 @@ export const SidePanel: React.FC<{ mode: AuthMode }> = ({ mode }) => {
   const config = {
     login: { t: 'Streamline your global supply chain', d: 'Advanced analytics, real-time tracking, and automated workflows designed for modern logistics teams.', img: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80' },
     register: { t: 'Join thousands of logistics leaders', d: 'Get instant access to advanced analytics, real-time tracking, and automated workflows.', img: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80' },
-    forgot_password: { t: 'Secure & Reliable', d: 'We use industry-standard encryption to keep your account and data safe at all times.', img: 'https://images.unsplash.com/photo-1556742502-ec7c0e9f34b1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1974&q=80' }
+    forgot_password: { t: 'Secure & Reliable Recovery', d: 'We use industry-standard encryption to keep your account and data safe at all times.', img: 'https://images.unsplash.com/photo-1556742502-ec7c0e9f34b1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1974&q=80' }
   }[mode];
 
   return (

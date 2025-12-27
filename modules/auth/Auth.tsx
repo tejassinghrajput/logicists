@@ -16,16 +16,9 @@ export const Auth: React.FC<AuthProps> = ({ onLogin }) => {
       sidePanel={<SidePanel mode={mode} />}
       form={
         mode === 'login' ? (
-          <LoginForm 
-            onLogin={onLogin} 
-            onForgot={() => setMode('forgot_password')} 
-            onRegister={() => setMode('register')} 
-          />
+          <LoginForm onLogin={onLogin} onForgot={() => setMode('forgot_password')} onRegister={() => setMode('register')} />
         ) : mode === 'register' ? (
-          <RegisterForm 
-            onLogin={onLogin} 
-            onSignIn={() => setMode('login')} 
-          />
+          <RegisterForm onLogin={onLogin} onSignIn={() => setMode('login')} />
         ) : (
           <ResetPasswordForm onBack={() => setMode('login')} />
         )

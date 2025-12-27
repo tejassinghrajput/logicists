@@ -17,10 +17,7 @@ export const ResetPasswordForm: React.FC<{ onBack: () => void }> = ({ onBack }) 
 
   return (
     <>
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-900">Reset Password</h1>
-        <p className="text-slate-500 mt-2">Enter your email address and we'll send you a link to reset your password.</p>
-      </div>
+      <div className="mb-8"><h1 className="text-3xl font-bold text-slate-900">Reset Password</h1><p className="text-slate-500 mt-2">Enter your email for reset instructions.</p></div>
       <form onSubmit={handleSubmit} className="space-y-6 animate-slide-up">
         <Input label="Email Address" type="email" icon={Mail} placeholder="name@company.com" required />
         <Button type="submit" fullWidth className="py-3">
