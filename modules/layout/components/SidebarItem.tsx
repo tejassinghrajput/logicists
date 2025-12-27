@@ -1,24 +1,15 @@
-
 import React from 'react';
 import { ChevronRight } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
 import { Tooltip } from '../../../common/components/Shared';
-import { ViewState } from '../../../common/types';
 
-export type NavItem = { id: string; label: string; icon?: React.ElementType; view?: ViewState; children?: NavItem[]; };
+export type NavItem = { id: string; label: string; icon?: React.ElementType; path?: string; children?: NavItem[]; };
+interface SidebarItemProps { item: NavItem; isExpanded: boolean; isOpen: boolean; onToggle: (id: string) => void; depth?: number; }
 
-interface SidebarItemProps {
-  item: NavItem;
-  currentView: ViewState;
-  onNavigate: (view: ViewState) => void;
-  isExpanded: boolean;
-  isOpen: boolean;
-  onToggle: (id: string) => void;
-  depth?: number;
-}
-
-export const SidebarItem: React.FC<SidebarItemProps> = ({ item, currentView, onNavigate, isExpanded, isOpen, onToggle, depth = 0 }) => {
-  const isActive = item.view === currentView;
-  const hasActiveChild = item.children?.some(c => c.view === currentView);
+export const SidebarItem: React.FC<SidebarItemProps> = ({ item, isExpanded, isOpen, onToggle, depth = 0 }) => {
+  const location = useLocation();
+  const isActive = item.path === '/' ? location.pathname === '/' : item.path && location.pathname.startsWith(item.path);
+  const hasActiveChild = item.children?.some(c => c.path && location.pathname.startsWith(c.path));
   const paddingLeft = depth === 0 ? 'px-3' : 'pl-11 pr-3';
 
   if (item.children) {
@@ -32,16 +23,16 @@ export const SidebarItem: React.FC<SidebarItemProps> = ({ item, currentView, onN
                   {isExpanded && <ChevronRight className={`w-4 h-4 transition-transform duration-200 ${isOpen ? 'rotate-90 text-brand-400' : 'text-slate-600'}`} />}
               </button>
               <div className={`overflow-hidden transition-all duration-300 ease-in-out ${isOpen && isExpanded ? 'max-h-96 opacity-100 mt-1' : 'max-h-0 opacity-0'}`}>
-                  {item.children.map(child => <SidebarItem key={child.id} item={child} currentView={currentView} onNavigate={onNavigate} isExpanded={isExpanded} isOpen={false} onToggle={onToggle} depth={depth + 1} />)}
+                  {item.children.map(child => <SidebarItem key={child.id} item={child} isExpanded={isExpanded} isOpen={false} onToggle={onToggle} depth={depth + 1} />)}
               </div>
           </div>
       );
   }
   const btn = (
-      <button onClick={() => item.view && onNavigate(item.view)} className={`w-full flex items-center py-2.5 mb-1 rounded-xl transition-all duration-200 group relative ${isActive ? 'bg-brand-600 shadow-glow text-white' : 'text-slate-400 hover:text-white hover:bg-white/5'} ${paddingLeft} ${!isExpanded ? 'justify-center px-0' : ''}`}>
+      <Link to={item.path || '#'} className={`flex items-center py-2.5 mb-1 rounded-xl transition-all duration-200 group relative ${isActive ? 'bg-brand-600 shadow-glow text-white' : 'text-slate-400 hover:text-white hover:bg-white/5'} ${paddingLeft} ${!isExpanded ? 'justify-center px-0' : ''}`}>
           {item.icon && <item.icon className={`w-5 h-5 flex-shrink-0 ${isActive ? 'text-white' : 'text-slate-500 group-hover:text-slate-300'}`} />}
           <span className={`ml-3 font-medium text-sm whitespace-nowrap transition-all duration-300 ${!isExpanded ? 'opacity-0 w-0 ml-0' : 'opacity-100'}`}>{item.label}</span>
-      </button>
+      </Link>
   );
   return !isExpanded ? <Tooltip content={item.label} position="right">{btn}</Tooltip> : btn;
 };

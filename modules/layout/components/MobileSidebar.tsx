@@ -1,18 +1,13 @@
-
 import React, { useState } from 'react';
 import { X, Package, LogOut } from 'lucide-react';
-import { ViewState } from '../../../common/types';
 import { NavItem, SidebarItem } from './SidebarItem';
 
 interface Props {
-    isOpen: boolean; onClose: () => void; navGroups: { label: string; items: NavItem[] }[];
-    currentView: ViewState; onNavigate: (v: ViewState) => void; onLogout: () => void;
+    isOpen: boolean; onClose: () => void; navGroups: { label: string; items: NavItem[] }[]; onLogout: () => void;
 }
 
-export const MobileSidebar: React.FC<Props> = ({ isOpen, onClose, navGroups, currentView, onNavigate, onLogout }) => {
+export const MobileSidebar: React.FC<Props> = ({ isOpen, onClose, navGroups, onLogout }) => {
     const [openParents, setOpenParents] = useState<Record<string, boolean>>({});
-    const handleNav = (v: ViewState) => { onNavigate(v); onClose(); };
-
     return (
         <div className={`fixed inset-0 z-50 md:hidden ${isOpen ? 'pointer-events-auto' : 'pointer-events-none'}`}>
             <div className={`fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0'}`} onClick={onClose} />
@@ -25,9 +20,7 @@ export const MobileSidebar: React.FC<Props> = ({ isOpen, onClose, navGroups, cur
                     {navGroups.map((g, i) => (
                         <div key={i}>
                             <div className="px-3 mb-2 text-[10px] font-bold uppercase tracking-wider text-slate-500">{g.label}</div>
-                            {g.items.map(item => (
-                                <SidebarItem key={item.id} item={item} currentView={currentView} onNavigate={handleNav} isExpanded={true} isOpen={!!openParents[item.id]} onToggle={(id) => setOpenParents(p => ({...p, [id]: !p[id]}))} />
-                            ))}
+                            {g.items.map(item => <div key={item.id} onClick={onClose}><SidebarItem item={item} isExpanded={true} isOpen={!!openParents[item.id]} onToggle={(id) => setOpenParents(p => ({...p, [id]: !p[id]}))} /></div>)}
                         </div>
                     ))}
                     <button onClick={onLogout} className="w-full flex items-center px-4 py-3 text-sm font-medium text-rose-400 hover:bg-rose-900/20 rounded-xl"><LogOut className="w-5 h-5 mr-3" />Sign Out</button>

@@ -1,24 +1,20 @@
-
 import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Shipment } from '../../common/types';
 import { getShipments } from '../../common/utils/storage';
 import { ArrowLeft } from 'lucide-react';
 import { TrackingMap } from './components/TrackingMap';
 import { TrackingTimeline } from './components/TrackingTimeline';
 
-interface TrackingProps { shipmentId: string | null; onBack: () => void; }
-
-export const Tracking: React.FC<TrackingProps> = ({ shipmentId, onBack }) => {
+export const Tracking: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [shipments, setShipments] = useState<Shipment[]>([]);
   const [loading, setLoading] = useState(true);
   
-  useEffect(() => {
-    const response = getShipments();
-    if (response.status === 200) setShipments(response.data);
-    setLoading(false);
-  }, []);
+  useEffect(() => { const response = getShipments(); if (response.status === 200) setShipments(response.data); setLoading(false); }, []);
 
-  const shipment = shipments.find(s => s.id === shipmentId) || shipments[0];
+  const shipment = id ? shipments.find(s => s.id === id) : shipments[0];
 
   if (loading) return <div className="p-8 text-center text-slate-500">Loading tracking details...</div>;
   if (!shipment) return <div className="p-8 text-center text-slate-500">Shipment not found.</div>;
@@ -26,7 +22,7 @@ export const Tracking: React.FC<TrackingProps> = ({ shipmentId, onBack }) => {
   return (
     <>
       <div className="flex items-center space-x-4 mb-8">
-        <button onClick={onBack} className="p-2 rounded-full bg-white border border-slate-200 text-slate-500 hover:text-slate-900 hover:border-slate-300 transition-all shadow-sm">
+        <button onClick={() => navigate(-1)} className="p-2 rounded-full bg-white border border-slate-200 text-slate-500 hover:text-slate-900 hover:border-slate-300 transition-all shadow-sm">
           <ArrowLeft className="w-5 h-5" />
         </button>
         <div><h1 className="text-2xl font-bold text-slate-900">Tracking Details</h1><p className="text-sm text-slate-500">Real-time status updates</p></div>

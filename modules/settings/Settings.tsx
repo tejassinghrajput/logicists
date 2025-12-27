@@ -1,5 +1,5 @@
-
 import React from 'react';
+import { useParams } from 'react-router-dom';
 import { UserProfile } from './components/UserProfile';
 import { CompanyProfile } from './components/CompanyProfile';
 import { PayoutPreferences } from './components/PayoutPreferences';
@@ -8,31 +8,31 @@ import { NotificationSettings } from './components/NotificationSettings';
 import { ApiKeySettings } from './components/ApiKeySettings';
 import { IntegrationsSettings } from './components/IntegrationsSettings';
 
-interface SettingsProps { view: string; }
-
-export const Settings: React.FC<SettingsProps> = ({ view }) => {
+export const Settings: React.FC = () => {
+  const { tab } = useParams<{ tab: string }>();
+  
   const getComponent = () => {
-      switch (view) {
-          case 'settings_user': return <UserProfile />;
-          case 'settings_company': return <CompanyProfile />;
-          case 'settings_payouts': return <PayoutPreferences />;
-          case 'settings_security': return <SecuritySettings />;
-          case 'settings_notifications': return <NotificationSettings />;
-          case 'settings_integrations': return <IntegrationsSettings />;
-          case 'settings_api': return <ApiKeySettings />;
+      switch (tab) {
+          case 'profile': return <UserProfile />;
+          case 'company': return <CompanyProfile />;
+          case 'payouts': return <PayoutPreferences />;
+          case 'security': return <SecuritySettings />;
+          case 'notifications': return <NotificationSettings />;
+          case 'integrations': return <IntegrationsSettings />;
+          case 'api': return <ApiKeySettings />;
           default: return <UserProfile />;
       }
   };
 
   const getTitle = () => {
-      switch (view) {
-          case 'settings_user': return { t: 'My Profile', s: 'Manage your personal information.' };
-          case 'settings_company': return { t: 'Company Profile', s: 'Manage business identity and tax info.' };
-          case 'settings_payouts': return { t: 'Payout Settings', s: 'Manage banking and withdrawal preferences.' };
-          case 'settings_security': return { t: 'Security', s: 'Protect your account and sessions.' };
-          case 'settings_notifications': return { t: 'Notifications', s: 'Configure alert preferences.' };
-          case 'settings_integrations': return { t: 'Integrations', s: 'Connect third-party tools.' };
-          case 'settings_api': return { t: 'API Keys', s: 'Manage developer access keys.' };
+      switch (tab) {
+          case 'profile': return { t: 'My Profile', s: 'Manage your personal information.' };
+          case 'company': return { t: 'Company Profile', s: 'Manage business identity and tax info.' };
+          case 'payouts': return { t: 'Payout Settings', s: 'Manage banking and withdrawal preferences.' };
+          case 'security': return { t: 'Security', s: 'Protect your account and sessions.' };
+          case 'notifications': return { t: 'Notifications', s: 'Configure alert preferences.' };
+          case 'integrations': return { t: 'Integrations', s: 'Connect third-party tools.' };
+          case 'api': return { t: 'API Keys', s: 'Manage developer access keys.' };
           default: return { t: 'Settings', s: 'Manage your account.' };
       }
   };
