@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { DataTable } from '../../../common/components/DataTable';
 import { Modal, Button, useToast } from '../../../common/components/Shared';
@@ -105,15 +104,35 @@ export const ActivityView: React.FC<ActivityViewProps> = ({ notifications, onMar
                 onClose={() => setSelectedNotification(null)}
                 title="Notification Details"
                 footer={
-                    <div className="flex w-full justify-between items-center bg-slate-50/50 -mx-6 -mb-6 px-6 py-4 border-t border-slate-100 rounded-b-2xl">
-                        <Button variant="danger" icon={Trash2} onClick={() => { 
-                            if(selectedNotification) handleDelete(selectedNotification); 
-                        }}>Delete</Button>
-                        <div className="flex gap-3">
+                    <div className="flex flex-col-reverse sm:flex-row w-full justify-between items-center gap-3">
+                        <Button 
+                            variant="danger" 
+                            icon={Trash2} 
+                            onClick={() => { 
+                                if(selectedNotification) handleDelete(selectedNotification); 
+                            }}
+                            className="w-full sm:w-auto"
+                        >
+                            Delete
+                        </Button>
+                        <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
                             {selectedNotification && !selectedNotification.read && (
-                                <Button variant="secondary" icon={MailOpen} onClick={() => handleMarkAsRead(selectedNotification)}>Mark as Read</Button>
+                                <Button 
+                                    variant="secondary" 
+                                    icon={MailOpen} 
+                                    onClick={() => handleMarkAsRead(selectedNotification)}
+                                    className="w-full sm:w-auto"
+                                >
+                                    Mark as Read
+                                </Button>
                             )}
-                            <Button variant="primary" onClick={() => setSelectedNotification(null)}>Close</Button>
+                            <Button 
+                                variant="primary" 
+                                onClick={() => setSelectedNotification(null)}
+                                className="w-full sm:w-auto"
+                            >
+                                Close
+                            </Button>
                         </div>
                     </div>
                 }

@@ -83,7 +83,7 @@ export function DataTable<T extends Record<string, any>>(props: DataTableProps<T
       <Table {...props} data={filteredData} onOpenRowMenu={handleOpenRowMenu} />
       
       {activeMenu && createPortal(
-          <div className="fixed inset-0 z-[9999] flex items-start justify-start" onClick={() => setActiveMenu(null)}>
+          <div className="fixed inset-0 z-[100] flex items-start justify-start" onClick={() => setActiveMenu(null)}>
              <div 
                 className="fixed w-48 bg-white rounded-xl shadow-xl border border-slate-100 ring-1 ring-slate-900/5 animate-scale-in origin-top-right" 
                 style={{ top: activeMenu.y, left: activeMenu.x }}
