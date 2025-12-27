@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from 'react';
 import { MenuList } from '../Shared';
 import { Toolbar } from './Toolbar';
@@ -47,9 +46,24 @@ export function DataTable<T extends Record<string, any>>(props: DataTableProps<T
 
   const handleOpenRowMenu = (e: React.MouseEvent, actions: RowAction<T>[], item: T) => {
       const rect = e.currentTarget.getBoundingClientRect();
+      const menuWidth = 192; // w-48
+      const spaceRight = window.innerWidth - rect.right;
+      
+      // Calculate optimized position
+      let x = rect.left;
+      if (spaceRight < menuWidth) {
+          x = window.innerWidth - menuWidth - 16; // 16px padding from edge
+      }
+      
+      const spaceBottom = window.innerHeight - rect.bottom;
+      let y = rect.bottom + 5;
+      if (spaceBottom < 250) { // If close to bottom
+           y = rect.top - (actions.length * 42) - 10;
+      }
+
       setActiveMenu({
-          x: window.innerWidth - rect.right < 200 ? window.innerWidth - 220 : rect.left,
-          y: window.innerHeight - rect.bottom < 200 ? rect.top - (actions.length * 40) - 20 : rect.bottom + 5,
+          x: Math.max(16, x), // Ensure not off-screen left
+          y,
           isOpen: true,
           items: actions.map(a => ({ label: a.label, icon: a.icon, variant: a.variant === 'danger' ? 'danger' : 'default', onClick: () => a.onClick(item) }))
       });
@@ -60,7 +74,7 @@ export function DataTable<T extends Record<string, any>>(props: DataTableProps<T
       <Toolbar {...props} searchQuery={searchQuery} onSearchChange={setSearchQuery} activeFilterCount={Object.keys(activeFilters).filter(k => activeFilters[k]).length} activeFilters={activeFilters} onFilterChange={(k, v) => setActiveFilters(p => ({...p, [k]: v}))} onClearFilters={() => setActiveFilters({})} />
       <Table {...props} data={filteredData} onOpenRowMenu={handleOpenRowMenu} />
       {activeMenu && (
-          <div className="fixed z-[9999] w-48 bg-white rounded-xl shadow-xl border border-slate-100 ring-1 ring-slate-900/5 animate-scale-in" style={{ top: activeMenu.y, left: activeMenu.x }}>
+          <div className="fixed z-[9999] w-48 bg-white rounded-xl shadow-xl border border-slate-100 ring-1 ring-slate-900/5 animate-scale-in origin-top-right" style={{ top: activeMenu.y, left: activeMenu.x }}>
              <MenuList items={activeMenu.items} onClose={() => setActiveMenu(null)} />
              <div className="fixed inset-0 -z-10" onClick={() => setActiveMenu(null)} />
           </div>

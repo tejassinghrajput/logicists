@@ -1,6 +1,5 @@
-
 import React, { useState, useRef } from 'react';
-import { Search, Filter, MoreHorizontal } from 'lucide-react';
+import { Search, Filter, MoreHorizontal, SlidersHorizontal, Plus } from 'lucide-react';
 import { Button, Input, Dropdown } from '../Shared';
 import { FilterPanel } from './FilterPanel';
 import { FilterDefinition, ActionConfig } from './types';
@@ -28,27 +27,72 @@ export function Toolbar<T>({
     const filterRef = useRef<HTMLDivElement>(null);
     const overflowActions = secondaryActions?.slice(2) || [];
 
+    // Mobile Menu Items construction
+    const mobileMenuItems = [];
+    if (filterConfig && filterConfig.length > 0) {
+        mobileMenuItems.push({ 
+            label: `Filters ${activeFilterCount > 0 ? `(${activeFilterCount})` : ''}`, 
+            icon: Filter, 
+            onClick: () => setIsFilterOpen(true) 
+        });
+    }
+    if (primaryAction) {
+        mobileMenuItems.push({ label: primaryAction.label, icon: primaryAction.icon || Plus, onClick: primaryAction.onClick, variant: 'default' as const });
+    }
+    if (secondaryActions) {
+        secondaryActions.forEach(action => {
+             mobileMenuItems.push({ label: action.label, icon: action.icon, onClick: action.onClick });
+        });
+    }
+
     return (
-      <div className="p-5 border-b border-slate-100 bg-white flex flex-col lg:flex-row justify-between items-center gap-4 rounded-t-2xl z-20 relative">
-          <div className="flex flex-col sm:flex-row items-center w-full lg:w-auto gap-3">
+      <div className="p-4 sm:p-6 border-b border-slate-100 bg-white flex flex-col xl:flex-row justify-between items-center gap-4 rounded-t-2xl z-20 relative">
+          
+          {/* Main Layout */}
+          <div className="flex items-center gap-3 w-full">
+             {/* Search Bar - Flex Grow to take available space */}
              {enableSearch && (
-                 <Input icon={Search} placeholder={searchPlaceholder} value={searchQuery} onChange={(e) => onSearchChange(e.target.value)} className="w-full sm:w-64" />
-             )}
-             {filterConfig && filterConfig.length > 0 && (
-                 <div className="relative" ref={filterRef}>
-                     <Button variant={activeFilterCount > 0 ? 'primary' : 'secondary'} icon={Filter} onClick={() => setIsFilterOpen(!isFilterOpen)}>
-                        Filters {activeFilterCount > 0 && <span className="ml-1 bg-white/20 px-1.5 py-0.5 rounded text-[10px]">{activeFilterCount}</span>}
-                     </Button>
-                     {isFilterOpen && <FilterPanel filters={filterConfig} activeFilters={activeFilters} onFilterChange={onFilterChange} onClear={() => { onClearFilters(); setIsFilterOpen(false); }} onClose={() => setIsFilterOpen(false)} />}
+                 <div className="flex-1">
+                    <Input icon={Search} placeholder={searchPlaceholder} value={searchQuery} onChange={(e) => onSearchChange(e.target.value)} className="w-full shadow-sm" />
                  </div>
              )}
+
+             {/* Desktop Actions (Hidden on Mobile) */}
+             <div className="hidden md:flex items-center gap-3">
+                 {filterConfig && filterConfig.length > 0 && (
+                     <div className="relative" ref={filterRef}>
+                         <Button variant={activeFilterCount > 0 ? 'primary' : 'secondary'} icon={Filter} onClick={() => setIsFilterOpen(!isFilterOpen)}>
+                            Filters {activeFilterCount > 0 && <span className="ml-1.5 bg-white/20 px-1.5 py-0.5 rounded text-[10px] font-bold">{activeFilterCount}</span>}
+                         </Button>
+                     </div>
+                 )}
+                 {secondaryActions?.slice(0, 2).map((a, i) => <Button key={i} variant={a.variant || 'secondary'} icon={a.icon} onClick={a.onClick}>{a.label}</Button>)}
+                 {overflowActions.length > 0 && <Dropdown trigger={<Button variant="secondary" icon={MoreHorizontal} />} items={overflowActions.map(a => ({ label: a.label, icon: a.icon, onClick: a.onClick, variant: a.variant === 'danger' ? 'danger' : 'default' }))} />}
+                 {primaryAction && <Button variant={primaryAction.variant || 'primary'} icon={primaryAction.icon} onClick={primaryAction.onClick}>{primaryAction.label}</Button>}
+             </div>
+
+             {/* Mobile Actions Menu (Visible on Mobile) */}
+             <div className="md:hidden flex-shrink-0">
+                 <Dropdown 
+                    align="right"
+                    trigger={<Button variant="secondary" icon={SlidersHorizontal} className="h-11 w-11 p-0" />} 
+                    items={mobileMenuItems}
+                 />
+             </div>
           </div>
-          <div className="flex items-center gap-3 w-full lg:w-auto justify-end">
-             {title && <h3 className="font-semibold text-slate-900 hidden xl:block mr-2">{title}</h3>}
-             {secondaryActions?.slice(0, 2).map((a, i) => <Button key={i} variant={a.variant || 'secondary'} icon={a.icon} onClick={a.onClick}>{a.label}</Button>)}
-             {overflowActions.length > 0 && <Dropdown trigger={<Button variant="secondary" icon={MoreHorizontal} />} items={overflowActions.map(a => ({ label: a.label, icon: a.icon, onClick: a.onClick, variant: a.variant === 'danger' ? 'danger' : 'default' }))} />}
-             {primaryAction && <Button variant={primaryAction.variant || 'primary'} icon={primaryAction.icon} onClick={primaryAction.onClick}>{primaryAction.label}</Button>}
-          </div>
+
+          {/* Filter Panel - Positioned relative to toolbar container on mobile if needed, or desktop anchor */}
+          {isFilterOpen && (
+             <div className="absolute top-full right-0 left-0 md:left-auto md:w-auto z-50 px-4 md:px-0 mt-2">
+                 <FilterPanel 
+                    filters={filterConfig || []} 
+                    activeFilters={activeFilters} 
+                    onFilterChange={onFilterChange} 
+                    onClear={() => { onClearFilters(); setIsFilterOpen(false); }} 
+                    onClose={() => setIsFilterOpen(false)} 
+                 />
+             </div>
+          )}
       </div>
     );
 }
