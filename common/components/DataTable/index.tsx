@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { createPortal } from 'react-dom';
 import { MenuList } from '../Shared';
 import { Toolbar } from './Toolbar';
 import { Table } from './Table';
@@ -45,6 +46,7 @@ export function DataTable<T extends Record<string, any>>(props: DataTableProps<T
   }, [props.data, searchQuery, activeFilters, props.searchKeys, props.enableSearch]);
 
   const handleOpenRowMenu = (e: React.MouseEvent, actions: RowAction<T>[], item: T) => {
+      e.stopPropagation();
       const rect = e.currentTarget.getBoundingClientRect();
       const menuWidth = 192; // w-48
       const spaceRight = window.innerWidth - rect.right;
@@ -52,20 +54,26 @@ export function DataTable<T extends Record<string, any>>(props: DataTableProps<T
       // Calculate optimized position
       let x = rect.left;
       if (spaceRight < menuWidth) {
-          x = window.innerWidth - menuWidth - 16; // 16px padding from edge
+          x = rect.right - menuWidth;
       }
       
       const spaceBottom = window.innerHeight - rect.bottom;
       let y = rect.bottom + 5;
-      if (spaceBottom < 250) { // If close to bottom
-           y = rect.top - (actions.length * 42) - 10;
+      // If close to bottom, show above
+      if (spaceBottom < 250) {
+           y = rect.top - (actions.length * 40) - 10;
       }
 
       setActiveMenu({
-          x: Math.max(16, x), // Ensure not off-screen left
+          x: Math.max(16, x),
           y,
           isOpen: true,
-          items: actions.map(a => ({ label: a.label, icon: a.icon, variant: a.variant === 'danger' ? 'danger' : 'default', onClick: () => a.onClick(item) }))
+          items: actions.map(a => ({ 
+              label: a.label, 
+              icon: a.icon, 
+              variant: a.variant === 'danger' ? 'danger' : 'default', 
+              onClick: () => a.onClick(item) 
+          }))
       });
   };
 
@@ -73,11 +81,18 @@ export function DataTable<T extends Record<string, any>>(props: DataTableProps<T
     <div className="bg-white rounded-2xl shadow-card border border-slate-100/50 relative">
       <Toolbar {...props} searchQuery={searchQuery} onSearchChange={setSearchQuery} activeFilterCount={Object.keys(activeFilters).filter(k => activeFilters[k]).length} activeFilters={activeFilters} onFilterChange={(k, v) => setActiveFilters(p => ({...p, [k]: v}))} onClearFilters={() => setActiveFilters({})} />
       <Table {...props} data={filteredData} onOpenRowMenu={handleOpenRowMenu} />
-      {activeMenu && (
-          <div className="fixed z-[9999] w-48 bg-white rounded-xl shadow-xl border border-slate-100 ring-1 ring-slate-900/5 animate-scale-in origin-top-right" style={{ top: activeMenu.y, left: activeMenu.x }}>
-             <MenuList items={activeMenu.items} onClose={() => setActiveMenu(null)} />
-             <div className="fixed inset-0 -z-10" onClick={() => setActiveMenu(null)} />
-          </div>
+      
+      {activeMenu && createPortal(
+          <div className="fixed inset-0 z-[9999] flex items-start justify-start" onClick={() => setActiveMenu(null)}>
+             <div 
+                className="fixed w-48 bg-white rounded-xl shadow-xl border border-slate-100 ring-1 ring-slate-900/5 animate-scale-in origin-top-right" 
+                style={{ top: activeMenu.y, left: activeMenu.x }}
+                onClick={e => e.stopPropagation()}
+             >
+                 <MenuList items={activeMenu.items} onClose={() => setActiveMenu(null)} />
+             </div>
+          </div>,
+          document.body
       )}
     </div>
   );

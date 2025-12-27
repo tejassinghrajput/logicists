@@ -17,7 +17,7 @@ export function Table<T>({ columns, data, isLoading, emptyMessage, onRowClick, r
   return (
     <div className="w-full">
       {/* Table View - Visible on all screens with horizontal scroll */}
-      <div className="block w-full overflow-x-auto relative z-0">
+      <div className="block w-full overflow-x-auto relative z-0 no-scrollbar">
         <table className="min-w-full divide-y divide-slate-100">
           <thead className="bg-slate-50/50">
             <tr>
@@ -49,8 +49,24 @@ export function Table<T>({ columns, data, isLoading, emptyMessage, onRowClick, r
                   {rowActions && (
                       <td className="px-6 py-5 text-right whitespace-nowrap">
                           <div className="flex justify-end gap-1.5 opacity-80 group-hover:opacity-100 transition-opacity" onClick={e => e.stopPropagation()}>
-                             {rowActions(item).slice(0, 2).map((a, i) => <Button key={i} variant={a.variant || 'ghost'} size="sm" icon={a.icon} onClick={(e) => { e.stopPropagation(); a.onClick(item); }} tooltip={a.label} />)}
-                             {rowActions(item).length > 2 && <Button variant="ghost" size="sm" icon={MoreHorizontal} onClick={(e) => onOpenRowMenu(e, rowActions(item).slice(2), item)} />}
+                             {/* Responsive Actions: Hide direct buttons on small screens, show menu */}
+                             <div className="hidden md:flex gap-1.5">
+                                 {rowActions(item).slice(0, 2).map((a, i) => (
+                                     <Button key={i} variant={a.variant || 'ghost'} size="sm" icon={a.icon} onClick={(e) => { e.stopPropagation(); a.onClick(item); }} tooltip={a.label} />
+                                 ))}
+                             </div>
+                             {/* Menu Button: Always visible if there are actions, handles all actions on mobile */}
+                             {(rowActions(item).length > 2 || true) && (
+                                <div className="md:hidden">
+                                     <Button variant="ghost" size="sm" icon={MoreHorizontal} onClick={(e) => onOpenRowMenu(e, rowActions(item), item)} />
+                                </div>
+                             )}
+                             {/* Desktop overflow menu */}
+                             {rowActions(item).length > 2 && (
+                                <div className="hidden md:block">
+                                     <Button variant="ghost" size="sm" icon={MoreHorizontal} onClick={(e) => onOpenRowMenu(e, rowActions(item).slice(2), item)} />
+                                </div>
+                             )}
                           </div>
                       </td>
                   )}
