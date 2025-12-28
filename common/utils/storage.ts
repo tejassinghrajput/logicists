@@ -1,51 +1,45 @@
-
-import { MOCK_KPI_DATA } from '../../mockData/kpis';
-import { MOCK_SHIPMENTS } from '../../mockData/shipments';
-import { MOCK_TRANSACTIONS } from '../../mockData/transactions';
-import { MOCK_INVOICES } from '../../mockData/invoices';
+import { KPIS } from '../../mockData/kpis';
+import { SHIPMENTS } from '../../mockData/shipments';
+import { TRANSACTIONS } from '../../mockData/transactions';
+import { INVOICES } from '../../mockData/invoices';
 import { Shipment, KPI, Transaction, Invoice, ApiResponse } from '../types';
 
 const KEYS = {
-  SHIPMENTS: 'logiflow_shipments', KPI: 'logiflow_kpi',
-  TRANSACTIONS: 'logiflow_transactions', INVOICES: 'logiflow_invoices',
-  INIT: 'logiflow_initialized', CHANNELS: 'logiflow_channels'
+  S: 'lf_s', K: 'lf_k', T: 'lf_t', I: 'lf_i', INIT: 'lf_init', C: 'lf_ch'
 };
 
-const createResponse = <T>(data: T, msg: string = 'Success', status: number = 200): ApiResponse<T> => 
-  ({ status, message: msg, data, errors: null });
+const createRes = <T>(data: T): ApiResponse<T> => 
+  ({ status: 200, message: 'OK', data, errors: null });
 
 export const initializeStorage = () => {
   if (typeof window === 'undefined') return;
   if (!localStorage.getItem(KEYS.INIT)) {
-    localStorage.setItem(KEYS.SHIPMENTS, JSON.stringify(MOCK_SHIPMENTS));
-    localStorage.setItem(KEYS.KPI, JSON.stringify(MOCK_KPI_DATA));
-    localStorage.setItem(KEYS.TRANSACTIONS, JSON.stringify(MOCK_TRANSACTIONS));
-    localStorage.setItem(KEYS.INVOICES, JSON.stringify(MOCK_INVOICES));
-    localStorage.setItem(KEYS.CHANNELS, JSON.stringify({ shopify: true }));
+    localStorage.setItem(KEYS.S, JSON.stringify(SHIPMENTS));
+    localStorage.setItem(KEYS.K, JSON.stringify(KPIS));
+    localStorage.setItem(KEYS.T, JSON.stringify(TRANSACTIONS));
+    localStorage.setItem(KEYS.I, JSON.stringify(INVOICES));
     localStorage.setItem(KEYS.INIT, 'true');
   }
 };
 
-export const getConnectedApps = (): Record<string, boolean> => {
-    if (typeof window === 'undefined') return {};
-    return JSON.parse(localStorage.getItem(KEYS.CHANNELS) || '{}');
-};
-
-export const toggleConnectedApp = (id: string): Record<string, boolean> => {
-    const current = getConnectedApps();
-    const newState = { ...current, [id]: !current[id] };
-    localStorage.setItem(KEYS.CHANNELS, JSON.stringify(newState));
-    return newState;
-};
-
 export const getShipments = (): ApiResponse<Shipment[]> => 
-  createResponse(JSON.parse(localStorage.getItem(KEYS.SHIPMENTS) || '[]'));
+  createRes(JSON.parse(localStorage.getItem(KEYS.S) || '[]'));
 
 export const getKPIs = (): ApiResponse<KPI[]> => 
-  createResponse(JSON.parse(localStorage.getItem(KEYS.KPI) || '[]'));
+  createRes(JSON.parse(localStorage.getItem(KEYS.K) || '[]'));
 
 export const getTransactions = (): ApiResponse<Transaction[]> => 
-  createResponse(JSON.parse(localStorage.getItem(KEYS.TRANSACTIONS) || '[]'));
+  createRes(JSON.parse(localStorage.getItem(KEYS.T) || '[]'));
 
 export const getInvoices = (): ApiResponse<Invoice[]> => 
-  createResponse(JSON.parse(localStorage.getItem(KEYS.INVOICES) || '[]'));
+  createRes(JSON.parse(localStorage.getItem(KEYS.I) || '[]'));
+
+export const getConnectedApps = (): Record<string, boolean> => 
+  JSON.parse(localStorage.getItem(KEYS.C) || '{}');
+
+export const toggleConnectedApp = (id: string): Record<string, boolean> => {
+  const current = getConnectedApps();
+  const next = { ...current, [id]: !current[id] };
+  localStorage.setItem(KEYS.C, JSON.stringify(next));
+  return next;
+};

@@ -1,0 +1,5 @@
+[
+  { "id": "r1", "type": "Standard", "price": "45.00", "days": "3-5", "carrier": "FedEx" },
+  { "id": "r2", "type": "Express", "price": "112.50", "days": "1-2", "carrier": "DHL" },
+  { "id": "r3", "type": "Freight", "price": "290.00", "days": "5-7", "carrier": "Maersk" }
+]

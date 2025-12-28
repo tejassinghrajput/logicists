@@ -12,44 +12,30 @@ import { AllView } from './modules/channels/views/AllView';
 import { OrdersView } from './modules/channels/views/OrdersView';
 import { ActivityView } from './modules/notifications/views/ActivityView';
 import { Auth } from './modules/auth/Auth';
-import { Notification } from './common/types';
+import { RateCalculator } from './modules/shipments/RateCalculator';
 import { initializeStorage } from './common/utils/storage';
 import { ToastProvider } from './common/components/Shared';
 import { MOCK_NOTIFICATIONS } from './common/mockData/notifications';
 import { authService } from './common/services/auth';
 
 export default function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(authService.isAuthenticated());
-  const [notifications, setNotifications] = useState<Notification[]>([]);
-
-  useEffect(() => { initializeStorage(); setNotifications(MOCK_NOTIFICATIONS); }, []);
-  const handleMarkAsRead = (id: string) => setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
-  const handleMarkAllAsRead = () => setNotifications(prev => prev.map(n => ({ ...n, read: true })));
-  const handleDeleteNotification = (id: string) => setNotifications(prev => prev.filter(n => n.id !== id));
-  const handleLogout = () => { authService.logout(); setIsAuthenticated(false); };
-
-  if (!isAuthenticated) return <ToastProvider><Auth onLogin={() => setIsAuthenticated(true)} /></ToastProvider>;
-
+  const [auth, setAuth] = useState(authService.isAuthenticated());
+  const [notifs, setNotifs] = useState(MOCK_NOTIFICATIONS);
+  useEffect(() => initializeStorage(), []);
+  const logout = () => { authService.logout(); setAuth(false); };
+  if (!auth) return <ToastProvider><Auth onLogin={() => setAuth(true)} /></ToastProvider>;
   return (
-    <ToastProvider>
-        <Layout onLogout={handleLogout} notifications={notifications} onMarkAsRead={handleMarkAsRead} onMarkAllAsRead={handleMarkAllAsRead}>
-            <Routes>
-                <Route path="/" element={<Dashboard />} />
-                <Route path="/shipments" element={<Shipments />} />
-                <Route path="/tracking" element={<Tracking />} />
-                <Route path="/tracking/:id" element={<Tracking />} />
-                <Route path="/wallet" element={<Wallet />} />
-                <Route path="/invoices" element={<Invoices />} />
-                <Route path="/channels/active" element={<ActiveView />} />
-                <Route path="/channels/all" element={<AllView />} />
-                <Route path="/channels/orders" element={<OrdersView />} />
-                <Route path="/notifications/all" element={<ActivityView notifications={notifications} onMarkAsRead={handleMarkAsRead} onDelete={handleDeleteNotification} filter="all" />} />
-                <Route path="/notifications/alerts" element={<ActivityView notifications={notifications} onMarkAsRead={handleMarkAsRead} onDelete={handleDeleteNotification} filter="alerts" />} />
-                <Route path="/notifications/announcements" element={<ActivityView notifications={notifications} onMarkAsRead={handleMarkAsRead} onDelete={handleDeleteNotification} filter="announcements" />} />
-                <Route path="/settings/:tab" element={<Settings />} />
-                <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-        </Layout>
-    </ToastProvider>
+    <ToastProvider><Layout onLogout={logout} notifications={notifs} onMarkAsRead={() => {}} onMarkAllAsRead={() => {}}>
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/shipments" element={<Shipments />} />
+        <Route path="/shipments/rates" element={<RateCalculator />} />
+        <Route path="/tracking" element={<Tracking />} /><Route path="/tracking/:id" element={<Tracking />} />
+        <Route path="/wallet" element={<Wallet />} /><Route path="/invoices" element={<Invoices />} />
+        <Route path="/channels/active" element={<ActiveView />} /><Route path="/channels/all" element={<AllView />} />
+        <Route path="/channels/orders" element={<OrdersView />} />
+        <Route path="/settings/:tab" element={<Settings />} /><Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </Layout></ToastProvider>
   );
 }

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { RowAction } from './types';
 
 export function useRowMenu<T>() {
@@ -11,6 +11,7 @@ export function useRowMenu<T>() {
         return () => { window.removeEventListener('scroll', close, true); window.removeEventListener('resize', close); };
     }, []);
 
+    // Explicitly using React.MouseEvent requires React in scope
     const open = (e: React.MouseEvent, actions: RowAction<T>[], item: T) => {
         e.stopPropagation(); e.preventDefault();
         const rect = e.currentTarget.getBoundingClientRect();

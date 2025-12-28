@@ -32,7 +32,7 @@ export function FilterPanel<T>({ filters, activeFilters, onFilterChange, onClear
                          label={config.label}
                          options={config.options || []}
                          value={activeFilters[String(config.key)] || ''}
-                         onChange={(e) => onFilterChange(String(config.key), e.target.value)}
+                         onChange={(val) => onFilterChange(String(config.key), val)}
                        />
                    ) : (
                        <Input 

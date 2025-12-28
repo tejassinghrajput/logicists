@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button, Input, Modal, Select, useToast } from '../../../../common/components/Shared';
 import { AlertTriangle, Key } from 'lucide-react';
@@ -25,7 +24,7 @@ export const GenerateKeyModal: React.FC<Props> = ({ isOpen, onClose, onGenerate 
         {!key ? (
             <div className="space-y-4">
                 <Input label="Name" value={name} onChange={e => setName(e.target.value)} />
-                <Select label="Env" options={[{label:'Test',value:'test'},{label:'Prod',value:'prod'}]} value={type} onChange={e => setType(e.target.value)} />
+                <Select label="Env" options={[{label:'Test',value:'test'},{label:'Prod',value:'prod'}]} value={type} onChange={setType} />
             </div>
         ) : (
             <div className="space-y-4">

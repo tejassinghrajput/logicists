@@ -6,6 +6,8 @@ interface HeaderProps<T> {
     col: Column<T>;
     sort: { key: keyof T; dir: 'asc' | 'desc' } | null;
     onSort: (key: keyof T) => void;
+    // Added optional key to resolve TS error in Table.tsx during column mapping
+    key?: React.Key;
 }
 
 export function TableHeader<T>({ col, sort, onSort }: HeaderProps<T>) {

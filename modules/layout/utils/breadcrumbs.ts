@@ -4,13 +4,15 @@ import { BreadcrumbItem } from '../../../common/components/Breadcrumbs/Breadcrum
 export const getBreadcrumbs = (pathname: string): BreadcrumbItem[] => {
     for (const group of NAV_GROUPS) {
         for (const item of group.items) {
-            if (item.path && pathname === item.path) return [{ label: group.label }, { label: item.label, active: true }];
-            if (item.children) {
-                for (const child of item.children) {
-                    if (child.path && pathname.startsWith(child.path)) {
-                         // Check for exact match or detailed view
-                         const isExact = pathname === child.path;
-                         const crumbs = [{ label: group.label }, { label: item.label }, { label: child.label, active: isExact }];
+            // Using any cast to handle union types from the configuration object
+            const i = item as any;
+            if (i.path && pathname === i.path) return [{ label: group.label }, { label: i.label, active: true }];
+            if (i.children) {
+                for (const child of i.children) {
+                    const c = child as any;
+                    if (c.path && pathname.startsWith(c.path)) {
+                         const isExact = pathname === c.path;
+                         const crumbs = [{ label: group.label }, { label: item.label }, { label: c.label, active: isExact }];
                          if (!isExact) crumbs.push({ label: 'Details', active: true });
                          return crumbs;
                     }
