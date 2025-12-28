@@ -18,7 +18,13 @@ export function Toolbar<T>({
     ];
 
     useEffect(() => {
-        const hide = (e: MouseEvent) => filterRef.current && !filterRef.current.contains(e.target as Node) && setIsFilterOpen(false);
+        const hide = (e: MouseEvent) => {
+            const target = e.target as HTMLElement;
+            const isPortal = target.closest('[data-select-portal]');
+            if (filterRef.current && !filterRef.current.contains(target) && !isPortal) {
+                setIsFilterOpen(false);
+            }
+        };
         if (isFilterOpen) document.addEventListener("mousedown", hide);
         return () => document.removeEventListener("mousedown", hide);
     }, [isFilterOpen]);
