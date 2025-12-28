@@ -16,34 +16,19 @@ export const Select: React.FC<SelectProps> = (props) => {
     return () => window.removeEventListener('resize', check);
   }, []);
 
-  useEffect(() => {
-    if (!isOpen) return;
-    const hide = (e: any) => {
-      const isPortal = e.target.closest('[data-select-portal]');
-      if (!ref.current?.contains(e.target) && !isPortal) setIsOpen(false);
-    };
-    const close = () => setIsOpen(false);
-    document.addEventListener("mousedown", hide);
-    window.addEventListener('scroll', close, true);
-    return () => {
-      document.removeEventListener("mousedown", hide);
-      window.removeEventListener('scroll', close, true);
-    };
-  }, [isOpen]);
-
   const handleOpen = () => {
     if (props.disabled || props.loading) return;
     const r = ref.current?.getBoundingClientRect();
     if (r) { setPos({ top: r.bottom + 8, left: r.left, width: r.width }); setIsOpen(true); }
   };
 
-  const filtered = props.searchable ? props.options.filter(o => o.label.toLowerCase().includes(search.toLowerCase())) : props.options;
+  const filtered = props.options.filter(o => o.label.toLowerCase().includes(search.toLowerCase()));
   const selected = props.options.find(o => String(o.value) === String(props.value));
 
   return (
     <div className={`w-full relative ${props.className}`} ref={ref}>
       {props.label && <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">{props.label}</label>}
-      <button type="button" onClick={() => isOpen ? setIsOpen(false) : handleOpen()} className={`w-full flex items-center justify-between rounded-xl border border-slate-200 px-3.5 py-2 text-sm font-semibold transition-all ${isOpen ? 'border-brand-500 ring-4 ring-brand-500/10 bg-white shadow-sm' : 'bg-white hover:border-slate-300'} ${props.disabled ? 'opacity-50' : ''}`}>
+      <button type="button" onClick={() => isOpen ? setIsOpen(false) : handleOpen()} className={`w-full flex items-center justify-between rounded-xl border border-slate-200 px-3.5 py-2.5 text-sm font-semibold transition-all ${isOpen ? 'border-brand-500 ring-4 ring-brand-500/10 bg-white shadow-sm' : 'bg-white hover:border-slate-300'} ${props.disabled ? 'opacity-50' : ''}`}>
         <span className={`truncate ${selected ? "text-slate-900" : "text-slate-300"}`}>{selected ? selected.label : props.placeholder || 'Select...'}</span>
         <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </button>
