@@ -16,8 +16,8 @@ export const Input: React.FC<InputProps> = ({
         <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest">{label}</label>
         {info && (
           <Tooltip content={info} position="top">
-            <button type="button" className="text-slate-300 hover:text-brand-500 transition-colors">
-              <Info className="w-3.5 h-3.5" />
+            <button type="button" className="p-1 -mr-1 text-slate-300 hover:text-brand-500 transition-colors active:scale-90" aria-label="Information">
+              <Info className="w-4 h-4" />
             </button>
           </Tooltip>
         )}
@@ -30,7 +30,7 @@ export const Input: React.FC<InputProps> = ({
         </div>
       )}
       <input
-        className={`block w-full rounded-xl border border-slate-200 bg-white text-slate-900 font-semibold placeholder:text-slate-300 placeholder:font-normal focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 sm:text-sm py-2 transition-all duration-200 ${Icon ? 'pl-10' : 'pl-3.5'} ${unit ? 'pr-12' : 'pr-3.5'} ${error ? 'border-rose-300 focus:border-rose-500' : 'hover:border-slate-300'} ${className}`}
+        className={`block w-full rounded-xl border border-slate-200 bg-white text-slate-900 font-semibold placeholder:text-slate-300 placeholder:font-normal focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 sm:text-sm py-2.5 transition-all duration-200 ${Icon ? 'pl-10' : 'pl-3.5'} ${unit ? 'pr-12' : 'pr-3.5'} ${error ? 'border-rose-300 focus:border-rose-500' : 'hover:border-slate-300'} ${className}`}
         {...props}
       />
       {unit && <span className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[9px] font-black text-slate-400 uppercase select-none tracking-tight">{unit}</span>}
