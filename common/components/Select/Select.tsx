@@ -42,8 +42,8 @@ export const Select: React.FC<SelectProps> = (props) => {
 
   return (
     <div className={`w-full relative ${props.className}`} ref={ref}>
-      {props.label && <label className="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-2 ml-1">{props.label}</label>}
-      <button type="button" onClick={() => isOpen ? setIsOpen(false) : handleOpen()} className={`w-full flex items-center justify-between rounded-2xl border px-4 py-3 text-sm font-bold transition-all ${isOpen ? 'border-brand-500 ring-4 ring-brand-500/10 bg-white shadow-sm' : 'border-slate-300 bg-white hover:border-slate-400'} ${props.disabled ? 'opacity-50' : ''}`}>
+      {props.label && <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">{props.label}</label>}
+      <button type="button" onClick={() => isOpen ? setIsOpen(false) : handleOpen()} className={`w-full flex items-center justify-between rounded-xl border border-slate-200 px-3.5 py-2 text-sm font-semibold transition-all ${isOpen ? 'border-brand-500 ring-4 ring-brand-500/10 bg-white shadow-sm' : 'bg-white hover:border-slate-300'} ${props.disabled ? 'opacity-50' : ''}`}>
         <span className={`truncate ${selected ? "text-slate-900" : "text-slate-300"}`}>{selected ? selected.label : props.placeholder || 'Select...'}</span>
         <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </button>

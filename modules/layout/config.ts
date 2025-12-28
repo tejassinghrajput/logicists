@@ -5,8 +5,8 @@ export const NAV_GROUPS = [
   { label: "Platform", items: [{ id: 'dash', label: 'Dashboard', icon: I.LayoutDashboard, path: '/' }] },
   { label: "Operations", items: [
     { id: 'ops_parent', label: 'Shipments', icon: I.Truck, children: [
+      { id: 's0', label: 'Create Order', path: '/shipments/create' },
       { id: 's1', label: 'All Orders', path: '/shipments' },
-      { id: 's2', label: 'Live Map', path: '/tracking' },
       { id: 's3', label: 'Rate Calculator', path: '/shipments/rates' },
     ]},
     { id: 'ch_parent', label: 'Channels', icon: I.Globe, children: [

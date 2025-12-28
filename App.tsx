@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { Layout } from './modules/layout/Layout';
 import { Dashboard } from './modules/dashboard/Dashboard';
 import { Shipments } from './modules/shipments/Shipments';
+import { CreateOrder } from './modules/shipments/CreateOrder/CreateOrder';
 import { Tracking } from './modules/tracking/Tracking';
 import { Wallet } from './modules/wallet/Wallet';
 import { Invoices } from './modules/invoices/Invoices';
@@ -35,6 +36,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/shipments" element={<Shipments />} />
+          <Route path="/shipments/create" element={<CreateOrder />} />
           <Route path="/shipments/rates" element={<RateCalculator />} />
           <Route path="/tracking" element={<Tracking />} /><Route path="/tracking/:id" element={<Tracking />} />
           <Route path="/wallet" element={<Wallet />} /><Route path="/invoices" element={<Invoices />} />
