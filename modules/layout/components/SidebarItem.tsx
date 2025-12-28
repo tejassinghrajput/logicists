@@ -9,7 +9,11 @@ interface SidebarItemProps { item: NavItem; isExpanded: boolean; isOpen: boolean
 export const SidebarItem: React.FC<SidebarItemProps> = ({ item, isExpanded, isOpen, onToggle, depth = 0, onLinkClick }) => {
   const loc = useLocation();
   const isLeaf = !item.children;
-  const isActive = isLeaf ? loc.pathname === item.path : (item.path && loc.pathname.startsWith(item.path));
+  // Dashboard path '/' needs exact match, others can use prefix matching if they are parent categories
+  const isActive = item.path === '/' 
+    ? loc.pathname === '/' 
+    : (isLeaf ? loc.pathname === item.path : (item.path && loc.pathname.startsWith(item.path)));
+  
   const hasActiveChild = item.children?.some(c => c.path && loc.pathname.startsWith(c.path));
   const pad = isExpanded ? (depth === 0 ? 'px-3' : 'pl-11 pr-3') : 'px-0 justify-center';
 
