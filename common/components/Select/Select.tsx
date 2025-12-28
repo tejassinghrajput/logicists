@@ -16,6 +16,21 @@ export const Select: React.FC<SelectProps> = (props) => {
     return () => window.removeEventListener('resize', check);
   }, []);
 
+  useEffect(() => {
+    if (!isOpen) return;
+    const hide = (e: any) => {
+      const isPortal = e.target.closest('[data-select-portal]');
+      if (!ref.current?.contains(e.target) && !isPortal) setIsOpen(false);
+    };
+    const close = () => setIsOpen(false);
+    document.addEventListener("mousedown", hide);
+    window.addEventListener('scroll', close, true);
+    return () => {
+      document.removeEventListener("mousedown", hide);
+      window.removeEventListener('scroll', close, true);
+    };
+  }, [isOpen]);
+
   const handleOpen = () => {
     if (props.disabled || props.loading) return;
     const r = ref.current?.getBoundingClientRect();

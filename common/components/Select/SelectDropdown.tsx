@@ -7,7 +7,7 @@ import { SelectOptions } from './SelectOptions';
 export const SelectDropdown: React.FC<DropdownProps & { isMobile: boolean }> = (p) => {
   if (!p.isOpen) return null;
   const content = (
-    <div className="flex flex-col h-full min-h-0 bg-white">
+    <div className="flex flex-col h-full min-h-0 bg-white" data-select-portal="true">
       {p.searchable && (
         <div className="p-3 border-b border-slate-100 bg-slate-50/30">
           <div className="relative group">

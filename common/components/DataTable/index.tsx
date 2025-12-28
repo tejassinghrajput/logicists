@@ -27,7 +27,7 @@ export function DataTable<T extends Record<string, any>>(props: DataTableProps<T
       <Toolbar 
         {...props} searchQuery={search} onSearchChange={setSearch} 
         activeFilterCount={Object.keys(filters).filter(k => filters[k]).length} 
-        activeFilters={filters} onFilterChange={(k, v) => setFilters(p => ({...p, [k]: v}))} 
+        activeFilters={filters} onFilterChange={(k: string, v: any) => setFilters(p => ({...p, [k]: v}))} 
         onClearFilters={() => setFilters({})} 
       />
       <Table 
